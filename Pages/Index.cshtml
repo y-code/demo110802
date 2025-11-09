@@ -12,7 +12,8 @@
 <div>
     <h2>Secrets</h2>
     <ul>
-        <li>@Model.Secret</li>
+        <li>Secret acquired directly from Azure Key Vault: @Model.Secret</li>
+        <li>Secret acquired from Azure Key Vault via Azure App Configuration: @Model.Settings.Secret</li>
     </ul>
 </div>
 

@@ -15,7 +15,14 @@ string endpoint = builder.Configuration.GetValue<string>("Endpoints:AppConfigura
 
 builder.Configuration.AddAzureAppConfiguration(options =>
 {
-    options.Connect(new Uri(endpoint), new DefaultAzureCredential());
+    options.Connect(new Uri(endpoint), new DefaultAzureCredential())
+        // give the Azure App Configuration service access to
+        // the Azure Key Vault service with the Web App service's identity
+        // to resolve Key-Vault references in Azure App Configuration service
+        .ConfigureKeyVault(kv =>
+        {
+            kv.SetCredential(new DefaultAzureCredential());
+        });
 });
 
 var app = builder.Build();
