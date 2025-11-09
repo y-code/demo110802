@@ -1,7 +1,22 @@
+using app;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Azure.AppConfiguration.AspNetCore;
+using System.Security.AccessControl;
+using Azure.Identity;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
+builder.Services.Configure<Settings>(builder.Configuration.GetSection("Demo"));
+
+string endpoint = builder.Configuration.GetValue<string>("Endpoints:AppConfiguration")
+    ?? throw new InvalidOperationException("The setting `Endpoints:AppConfiguration` was not found.");
+
+builder.Configuration.AddAzureAppConfiguration(options =>
+{
+    options.Connect(new Uri(endpoint), new DefaultAzureCredential());
+});
 
 var app = builder.Build();
 
